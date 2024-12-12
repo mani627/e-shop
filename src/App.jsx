@@ -2,9 +2,16 @@
 // A full implementation would require significantly more code, including API integration,
 // robust error handling, and more detailed styling.
 
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Routes, Route, Link, useNavigate, Router } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  Router,
+  BrowserRouter,
+} from "react-router-dom";
 // import {
 //   incrementItem,
 //   decrementItem,
@@ -24,11 +31,31 @@ import { Routes, Route, Link, useNavigate, Router } from 'react-router-dom';
 //   updateProduct,
 //   deleteProduct,
 // } from './productSlice'; // Create this slice
-import './index.css'; // Import your Tailwind CSS
-import { createCategory, deleteCategory, fetchCategories, selectAllCategories, toggleCategoryStatus, updateCategory } from './redux/categorySlice';
-import { createProduct, deleteProduct, fetchProducts, selectAllProducts, toggleProductStatus, updateProduct } from './redux/productsSlice';
-import { addToCart, clearCart, removeFromCart, selectCartItems, updateCartItemQuantity } from './redux/cartSlice';
-import { placeOrder, selectAllOrders } from './redux/orderSlice';
+import "./index.css"; // Import your Tailwind CSS
+import {
+  createCategory,
+  deleteCategory,
+  fetchCategories,
+  selectAllCategories,
+  toggleCategoryStatus,
+  updateCategory,
+} from "./redux/categorySlice";
+import {
+  createProduct,
+  deleteProduct,
+  fetchProducts,
+  selectAllProducts,
+  toggleProductStatus,
+  updateProduct,
+} from "./redux/productsSlice";
+import {
+  addToCart,
+  clearCart,
+  removeFromCart,
+  selectCartItems,
+  updateCartItemQuantity,
+} from "./redux/cartSlice";
+import { placeOrder, selectAllOrders } from "./redux/orderSlice";
 
 // const Header = () => {
 //   const cart = useSelector((state) => state.cart.items);
@@ -73,75 +100,30 @@ import { placeOrder, selectAllOrders } from './redux/orderSlice';
 //   );
 // };
 
-// const ProductListing = () => {
-//   // Implement fetching products by category ID
-//   return <div>Product Listing</div>;
-// };
-
-// const ItemDescription = () => {
-//   return <div>Item Description</div>;
-// };
-
-// const CartPage = () => {
-//   return <div>Cart Page</div>;
-// };
-
-// const OrdersListing = () => {
-//   return <div>Orders Listing</div>;
-// };
-
-// const CategoryList = () => {
-//   return <div>Category List</div>;
-// };
-
-// const CreateCategory = () => {
-//   return <div>Create Category</div>;
-// };
-
-// const UpdateCategory = () => {
-//   return <div>Update Category</div>;
-// };
-
-// const ProductList = () => {
-//   return <div>Product List</div>;
-// };
-
-// const CreateProduct = () => {
-//   return <div>Create Product</div>;
-// };
-
-// const UpdateProduct = () => {
-//   return <div>Update Product</div>;
-// };
 
 
-
-const Header = lazy(() => import('./components/Header'));
-const HomePage = lazy(() => import('./components/HomePage'));
+const Header = lazy(() => import("./components/Header"));
+const HomePage = lazy(() => import("./components/HomePage"));
 const ProductListing = lazy(() => import('./components/ProductListing'));
 const ItemDescription = lazy(() => import('./components/ItemDescription'));
-const CartPage = lazy(() => import('./components/CartPage'));
-const OrdersListing = lazy(() => import('./components/OrdersListing'));
-const CategoryList = lazy(() => import('./components/CategoryList'));
-const CreateCategory = lazy(() => import('./components/CreateCategory'));
-const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
-const ProductList = lazy(() => import('./components/ProductList'));
-const CreateProduct = lazy(() => import('./components/CreateProduct'));
-const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
+// const CartPage = lazy(() => import('./components/CartPage'));
+// const OrdersListing = lazy(() => import('./components/OrdersListing'));
+// const CategoryList = lazy(() => import('./components/CategoryList'));
+// const CreateCategory = lazy(() => import('./components/CreateCategory'));
+// const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
+// const ProductList = lazy(() => import('./components/ProductList'));
+// const CreateProduct = lazy(() => import('./components/CreateProduct'));
+// const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
 const App = () => {
-
-
-
-
   return (
-    <Router>
+    <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/products/:categoryId" element={<ProductListing />} />
+           <Route path="/products/:categoryId" element={<ProductListing />} />
           <Route path="/product/:productId" element={<ItemDescription />} />
-          <Route path="/cart" element={<CartPage />} />
+          {/* <Route path="/cart" element={<CartPage />} />
           <Route path="/orders" element={<OrdersListing />} />
 
           <Route path="/categories" element={<CategoryList />} />
@@ -151,10 +133,10 @@ const App = () => {
           
           <Route path="/products/list/:categoryId" element={<ProductList />} />
           <Route path="/products/create/:categoryId" element={<CreateProduct />} />
-          <Route path="/products/update/:id" element={<UpdateProduct />} />
+          <Route path="/products/update/:id" element={<UpdateProduct />} />   */}
         </Routes>
       </Suspense>
-    </Router>
+    </BrowserRouter>
   );
 };
 
@@ -166,7 +148,7 @@ const App = () => {
 //   const cartItems = useSelector(selectCartItems);
 //   const orders = useSelector(selectAllOrders);
 
-
+// console.log("mkm",cartItems)
 //   useEffect(() => {
 //       dispatch(fetchCategories());
 //   }, [dispatch]);
@@ -190,7 +172,6 @@ const App = () => {
 //           dispatch(fetchProducts(categories[0].id)); // Fetch for the first category initially
 //       }
 //   }, [dispatch, categories]);
-
 
 //   const handleProductToggle = (productId) => {
 //       dispatch(toggleProductStatus(productId));
@@ -224,7 +205,6 @@ const App = () => {
 //       });
 //   };
 
-
 //   // Example usage in JSX:
 //   return (
 //       <div>
@@ -239,7 +219,6 @@ const App = () => {
 //               </div>
 //           ))}
 //           <button onClick={() => handleCreateCategory({ name: 'New Cat', imageUrl: 'newurl' })}>Create Category</button>
-
 
 //           {/* Products */}
 //           <h2>Products</h2>
