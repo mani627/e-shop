@@ -100,14 +100,12 @@ import { placeOrder, selectAllOrders } from "./redux/orderSlice";
 //   );
 // };
 
-
-
 const Header = lazy(() => import("./components/Header"));
 const HomePage = lazy(() => import("./components/HomePage"));
-const ProductListing = lazy(() => import('./components/ProductListing'));
-const ItemDescription = lazy(() => import('./components/ItemDescription'));
-// const CartPage = lazy(() => import('./components/CartPage'));
-// const OrdersListing = lazy(() => import('./components/OrdersListing'));
+const ProductListing = lazy(() => import("./components/ProductListing"));
+const ItemDescription = lazy(() => import("./components/ItemDescription"));
+const CartPage = lazy(() => import("./components/CartPage"));
+const OrdersListing = lazy(() => import("./components/OrdersListing"));
 // const CategoryList = lazy(() => import('./components/CategoryList'));
 // const CreateCategory = lazy(() => import('./components/CreateCategory'));
 // const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
@@ -115,25 +113,31 @@ const ItemDescription = lazy(() => import('./components/ItemDescription'));
 // const CreateProduct = lazy(() => import('./components/CreateProduct'));
 // const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
 const App = () => {
+  const cartItems = useSelector(selectCartItems);
+  console.log("check",cartItems);
+  
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Header />
         <Routes>
+
+          {/* create orders */}
           <Route path="/" element={<HomePage />} />
-           <Route path="/products/:categoryId" element={<ProductListing />} />
+          <Route path="/products/:categoryId" element={<ProductListing />} />
           <Route path="/product/:productId" element={<ItemDescription />} />
-          {/* <Route path="/cart" element={<CartPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/orders" element={<OrdersListing />} />
 
-          <Route path="/categories" element={<CategoryList />} />
+          {/* Category Manipulation */}
+          {/* <Route path="/categories" element={<CategoryList />} />
           <Route path="/categories/create" element={<CreateCategory />} />
           <Route path="/categories/update/:id" element={<UpdateCategory />} />
 
-          
-          <Route path="/products/list/:categoryId" element={<ProductList />} />
+          {/* Product Manipulation */}
+          {/* <Route path="/products/list/:categoryId" element={<ProductList />} />
           <Route path="/products/create/:categoryId" element={<CreateProduct />} />
-          <Route path="/products/update/:id" element={<UpdateProduct />} />   */}
+          <Route path="/products/update/:id" element={<UpdateProduct />} />    */}
         </Routes>
       </Suspense>
     </BrowserRouter>

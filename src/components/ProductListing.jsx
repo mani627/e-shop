@@ -28,6 +28,7 @@ const ProductPage = () => {
   const navigate = useNavigate();
 
   const cartItems = useSelector(selectCartItems);
+console.log({data},cartItems);
 
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
@@ -52,7 +53,9 @@ const ProductPage = () => {
   };
 
   const findByCart = (product) => {
-    return cartItems.find((item) => item.id === product.id);
+   // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
+    
+    return cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId )
   };
 
   const handleIncrement = (product) => {
@@ -67,10 +70,12 @@ const ProductPage = () => {
         updateCartItemQuantity({
           id: product.id,
           quantity: cartItem.quantity - 1,
+          categoryId:product.categoryId,
         })
       );
     }
   };
+
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -114,7 +119,7 @@ const ProductPage = () => {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "center" }}>
-                    {cart[product.id] ? (
+                    { findByCart(product) ? (
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <IconButton
                           onClick={() => handleDecrement(product)}
@@ -138,7 +143,7 @@ const ProductPage = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleAddToCart(product)}
+                        onClick={() =>   handleIncrement(product)}
                       >
                         Add to Cart
                       </Button>

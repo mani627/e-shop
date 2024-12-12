@@ -31,7 +31,7 @@ const ItemDescription = () => {
   };
 
   const findByCart = (product) => {
-    return cartItems.find((item) => item.id === product.id);
+    return cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId);
   };
 
   const handleDecrement = (product) => {
@@ -42,6 +42,7 @@ const ItemDescription = () => {
         updateCartItemQuantity({
           id: product.id,
           quantity: cartItem.quantity - 1,
+          categoryId:product.categoryId,
         })
       );
     }
@@ -91,7 +92,6 @@ const ItemDescription = () => {
             </Typography>
 
             {/* Quantity Manager */}
-
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <IconButton
                 onClick={() => handleDecrement(product)}

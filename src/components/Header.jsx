@@ -28,7 +28,7 @@ const Header = () => {
     <AppBar position="static" color="primary">
       <Toolbar>
         {/* Left Side - Logo */}
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography onClick={()=>navigate("/")} variant="h6" component="div" sx={{ flexGrow: 1, cursor:"pointer" }}>
           MyLogo
         </Typography>
 
