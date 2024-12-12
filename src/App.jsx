@@ -204,7 +204,7 @@ const App = () => {
        //   navigate('/orders'); // Navigate after placing the order
       });
   };
-console.log("kmk",products);
+
 
   // Example usage in JSX:
   return (
@@ -216,7 +216,7 @@ console.log("kmk",products);
                   <p>{category.name}</p>
                   <button onClick={() => handleCategoryToggle(category.id)}>Toggle Status</button>
                   <button onClick={() => handleDeleteCategory(category.id)}>Delete</button>
-                  <button onClick={() => handleUpdateCategory(category)}>Update</button>
+                  <button onClick={() => handleUpdateCategory({id:category.id, name: 'category Updated', imageUrl: ' updated newurl' })}>Update</button>
               </div>
           ))}
           <button onClick={() => handleCreateCategory({ name: 'New Cat', imageUrl: 'newurl' })}>Create Category</button>
@@ -229,7 +229,7 @@ console.log("kmk",products);
                   <p>{product.name}</p>
                   <button onClick={() => handleProductToggle(product.id)}>Toggle Status</button>
                   <button onClick={() => handleDeleteProduct(product.id)}>Delete</button>
-                  <button onClick={() => handleUpdateProduct(product)}>Update</button>
+                  <button onClick={() => handleUpdateProduct({id:product.id, name: 'updated Products', description: ' updated desc', stock: 100, price: 1000, imageUrl: 'updatd purl', categoryId: 1,isActive:true , sales:product.sales})}>Update</button>
                   <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
               </div>
           ))}
