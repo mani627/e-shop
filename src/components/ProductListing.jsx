@@ -13,22 +13,27 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import fallback from "../assets/images/fallback.png"; // Import fallback image
 import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addToCart,
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
+import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const ProductPage = () => {
-  const [cart, setCart] = useState({}); // Store cart items and their quantities
-  const data = useSelector(selectAllProducts);
+//  const [data, setData] = useState(useSelector(selectAllProducts))
+  const product = useSelector(selectAllProducts);
+  const productsWithOrdersData = useSelector(selectProductsWithOrders);
+const data=updateTotalWithOrder(product, productsWithOrdersData)
+
   const { categoryId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const cartItems = useSelector(selectCartItems);
-console.log({data},cartItems);
+
+  console.log("right", productsWithOrdersData, "left", data);
 
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
@@ -37,25 +42,35 @@ console.log({data},cartItems);
     }
   }, [dispatch, categoryId]);
 
+  function updateTotalWithOrder(total, order) {
+    return total.map(totalItem => {
+
+      const matchingOrderItem = order.find(orderItem => orderItem.id === totalItem.id);
+
+
+      return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
+    });
+  }
   useEffect(() => {
+    
+
+  }, [])
+
+
+  useEffect(() => {
+
     if (data.length === 0 || !data) {
+      
       navigate("/");
     }
   }, []);
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
 
-    setCart((prevCart) => ({
-      ...prevCart,
-      [product.id]: 1, // Start with a quantity of 1
-    }));
-  };
 
   const findByCart = (product) => {
-   // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
-    
-    return cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId )
+    // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
+
+    return cartItems.find((item) => item.id === product.id && product.categoryId === item.categoryId)
   };
 
   const handleIncrement = (product) => {
@@ -70,7 +85,7 @@ console.log({data},cartItems);
         updateCartItemQuantity({
           id: product.id,
           quantity: cartItem.quantity - 1,
-          categoryId:product.categoryId,
+          categoryId: product.categoryId,
         })
       );
     }
@@ -119,7 +134,7 @@ console.log({data},cartItems);
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: "center" }}>
-                    { findByCart(product) ? (
+                    {findByCart(product) ? (
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <IconButton
                           onClick={() => handleDecrement(product)}
@@ -143,7 +158,7 @@ console.log({data},cartItems);
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() =>   handleIncrement(product)}
+                        onClick={() => handleIncrement(product)}
                       >
                         Add to Cart
                       </Button>

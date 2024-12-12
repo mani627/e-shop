@@ -3,6 +3,7 @@ import categoriesSlice from "./categorySlice";
 import productsSlice from "./productsSlice";
 import cartSlice from "./cartSlice"
 import ordersSlice from "./orderSlice"
+import productsWithOrdersSlice from "./productsWithOrdersSlice"
 
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
         products: productsSlice,
         cart: cartSlice,
         orders: ordersSlice,
+        productsWithOrders: productsWithOrdersSlice
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(), // This line configures thunk
 });

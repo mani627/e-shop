@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Grid,
@@ -10,11 +10,20 @@ import {
 } from "@mui/material";
 import fallback from "../assets/images/fallback.png";
 import { selectAllOrders } from "../redux/orderSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAllProducts } from "../redux/productsSlice";
+import { addProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const OrdersListing = () => {
+  const dispatch = useDispatch();
   const orderList = useSelector(selectAllOrders);
-  console.log({ orderList });
+  const products = useSelector(selectAllProducts);
+  useEffect(()=>{
+    dispatch(addProductsWithOrders(products));
+  },[])
+
+  
+  
 
   // Function to calculate the total amount for an order's items
   const calculateOrderTotal = (items) =>

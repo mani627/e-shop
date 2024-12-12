@@ -1,6 +1,7 @@
-import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { placeOrder } from "./orderSlice";
 import mockApi from "../datas/index"
+import { addProductsWithOrders } from "./productsWithOrdersSlice";
 
 // Mock API (replace with your actual API calls)
 // const mockApi = {
@@ -29,7 +30,31 @@ const productsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchProducts.pending, (state) => { state.status = 'loading'; })
-            .addCase(fetchProducts.fulfilled, (state, action) => { state.status = 'succeeded'; state.products = action.payload; })
+
+            .addCase(fetchProducts.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // Only add new products if the state is empty
+                if (state.products.length === 0) {
+                    state.products = action.payload;
+                } else {
+                    state.products = action.payload.map((newProduct) => {
+                        const existingProduct = state.products.find((product) => product.id === newProduct.id);
+
+
+                        if (existingProduct) {
+                            return newProduct;
+                        }
+
+
+                        return newProduct;
+                    });
+                }
+
+
+
+
+            })
+
             .addCase(fetchProducts.rejected, (state, action) => { state.status = 'failed'; state.error = action.error.message; })
             .addCase(createProduct.fulfilled, (state, action) => { state.products.push(action.payload); })
             .addCase(updateProduct.fulfilled, (state, action) => {
@@ -41,7 +66,7 @@ const productsSlice = createSlice({
             .addCase(deleteProduct.fulfilled, (state, action) => {
                 state.products = state.products.filter((p) => p.id !== action.payload);
             })
-//deduct stock count when order place
+            //deduct stock count when order place
             .addCase(placeOrder.fulfilled, (state, action) => {
                 action.payload.items.forEach(orderedItem => {
                     const product = state.products.find(p => p.id === orderedItem.id);
@@ -50,12 +75,17 @@ const productsSlice = createSlice({
                         product.sales += orderedItem.quantity * product.price; // Increment sales
                     }
                 });
+
+
+                // dispatch(addProductsWithOrders(state.products));
+
             });
     },
 });
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async (categoryId) => {
-   
+
+
     return await mockApi.fetchProducts(categoryId);
 });
 export const createProduct = createAsyncThunk('products/createProduct', async (product) => {
@@ -63,8 +93,8 @@ export const createProduct = createAsyncThunk('products/createProduct', async (p
 });
 
 export const updateProduct = createAsyncThunk('products/updateProduct', async (product) => {
-    console.log("sdjfhbdsjkf",product.id);
-    
+    console.log("sdjfhbdsjkf", product.id);
+
     return await mockApi.updateProduct(product);
 });
 export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id) => {

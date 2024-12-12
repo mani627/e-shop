@@ -56,6 +56,7 @@ import {
   updateCartItemQuantity,
 } from "./redux/cartSlice";
 import { placeOrder, selectAllOrders } from "./redux/orderSlice";
+import { addProductsWithOrders, selectProductsWithOrders } from "./redux/productsWithOrdersSlice";
 
 // const Header = () => {
 //   const cart = useSelector((state) => state.cart.items);
@@ -106,15 +107,20 @@ const ProductListing = lazy(() => import("./components/ProductListing"));
 const ItemDescription = lazy(() => import("./components/ItemDescription"));
 const CartPage = lazy(() => import("./components/CartPage"));
 const OrdersListing = lazy(() => import("./components/OrdersListing"));
-// const CategoryList = lazy(() => import('./components/CategoryList'));
+const CategoryList = lazy(() => import('./components/CategoryList'));
 // const CreateCategory = lazy(() => import('./components/CreateCategory'));
 // const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
 // const ProductList = lazy(() => import('./components/ProductList'));
 // const CreateProduct = lazy(() => import('./components/CreateProduct'));
 // const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
 const App = () => {
-  const cartItems = useSelector(selectCartItems);
-  console.log("check",cartItems);
+
+  const orders = useSelector(selectAllOrders);
+  const productsWithOrdersData = useSelector(selectProductsWithOrders);
+  const products = useSelector(selectAllProducts);
+
+      
+  console.log("products",products, "orders",orders,"final",productsWithOrdersData);
   
   return (
     <BrowserRouter>
@@ -130,9 +136,9 @@ const App = () => {
           <Route path="/orders" element={<OrdersListing />} />
 
           {/* Category Manipulation */}
-          {/* <Route path="/categories" element={<CategoryList />} />
-          <Route path="/categories/create" element={<CreateCategory />} />
-          <Route path="/categories/update/:id" element={<UpdateCategory />} />
+         <Route path="/categories" element={<CategoryList />} />
+          {/* <Route path="/categories/create" element={<CreateCategory />} />
+          <Route path="/categories/update/:id" element={<UpdateCategory />} /> */}
 
           {/* Product Manipulation */}
           {/* <Route path="/products/list/:categoryId" element={<ProductList />} />

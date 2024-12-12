@@ -23,11 +23,14 @@ import { placeOrder, selectAllOrders } from "../redux/orderSlice";
 import { selectAllCategories } from "../redux/categorySlice";
 import { selectAllProducts } from "../redux/productsSlice";
 import { useNavigate } from "react-router-dom";
+import { addProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const CartPage = () => {
     const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+  
+
 
   const calculateItemTotal = (price, quantity) => price * quantity;
   const overallTotal = cartItems.reduce(
@@ -59,10 +62,13 @@ const CartPage = () => {
   };
 
   const handlePlaceOrder = () => {
+  
     dispatch(placeOrder(cartItems)).then(() => {
+
       dispatch(clearCart());
          navigate('/orders'); // Navigate after placing the order
     });
+
   };
 
   if (!cartItems || cartItems.length === 0) {

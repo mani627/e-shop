@@ -62,7 +62,7 @@ export const placeOrder = createAsyncThunk(
   async (cartItems, { getState }) => {
     // Get products state to access stock information
     const products = getState().products.products;
-    console.log("xx", products, cartItems);
+    
 
     const hasOverstockedItems = cartItems.some(
       (item) => item.quantity > item.stock
