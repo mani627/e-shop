@@ -12,16 +12,16 @@ import { useNavigate } from "react-router-dom";
 import { selectCartItems } from "../redux/cartSlice";
 
 const Header = () => {
-  const navigate = useNavigate(); // React Router's navigation hook
-  // Example cart count
+  const navigate = useNavigate(); 
+  
   const cartCount = useSelector(selectCartItems)?.length;
 
   const handleCartClick = () => {
-    navigate("/cart"); // Navigate to the Cart page
+    navigate("/cart"); 
   };
 
   const handleSettingsClick = () => {
-    navigate("/categories"); // Navigate to the Categories page
+    navigate("/categories"); 
   };
 
   return (

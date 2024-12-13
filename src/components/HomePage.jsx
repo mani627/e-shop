@@ -29,13 +29,13 @@ const HomePage = () => {
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         Categories
       </Typography>
-{data.length===0&& <Typography mt={5} variant="h4" component="h2" gutterBottom textAlign="center">
-      No Categories !!!
+      {data.length === 0 && <Typography mt={5} variant="h4" component="h2" gutterBottom textAlign="center">
+        No Categories !!!
       </Typography>}
       {/* Category Grid */}
       <Grid container spacing={3}>
-        {  data
-          .filter((category) => category.isActive) // Show only active categories
+        {data
+          .filter((category) => category.isActive) 
           .map((category) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={category.id}>
               <Card
@@ -52,8 +52,8 @@ const HomePage = () => {
                   image={category.imageUrl}
                   alt={category.name}
                   onError={(e) => {
-                    e.target.onerror = null; // Prevent infinite loop
-                    e.target.src = fallback; // Use fallback image
+                    e.target.onerror = null;
+                    e.target.src = fallback;
                   }}
                 />
                 <CardContent>
@@ -63,7 +63,7 @@ const HomePage = () => {
                 </CardContent>
               </Card>
             </Grid>
-          )) }
+          ))}
       </Grid>
 
     </Box>

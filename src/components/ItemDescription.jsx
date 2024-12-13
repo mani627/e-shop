@@ -25,14 +25,14 @@ const ItemDescription = () => {
   const productSpecific = products.find((item) => item.id === +productId);
 
   const productsWithOrdersData = useSelector(selectProductsWithOrders);
-  
+
   const product = updateTotalWithOrder([productSpecific], productsWithOrdersData)[0]
 
-  
+
   function updateTotalWithOrder(total, order) {
     return total.map(totalItem => {
       const matchingOrderItem = order.find(orderItem => orderItem.id === totalItem.id);
-      
+
       return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
     });
   }
@@ -49,7 +49,7 @@ const ItemDescription = () => {
   };
 
   const findByCart = (product) => {
-    return cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId);
+    return cartItems.find((item) => item.id === product.id && product.categoryId === item.categoryId);
   };
 
   const handleDecrement = (product) => {
@@ -60,7 +60,7 @@ const ItemDescription = () => {
         updateCartItemQuantity({
           id: product.id,
           quantity: cartItem.quantity - 1,
-          categoryId:product.categoryId,
+          categoryId: product.categoryId,
         })
       );
     }
@@ -82,7 +82,7 @@ const ItemDescription = () => {
               image={product.imageUrl}
               alt={product.name}
               onError={(e) => {
-                e.target.onerror = null; // Prevent infinite loop
+                e.target.onerror = null; 
                 e.target.src = fallback; // Fallback image
               }}
               sx={{

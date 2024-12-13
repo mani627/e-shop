@@ -11,7 +11,7 @@ const CategoryForm = () => {
 
   const categories = useSelector(selectAllCategories);
 
-  const [mode, setMode] = useState(id ? 'update' : 'create'); // Initial mode based on URL
+  const [mode, setMode] = useState(id ? 'update' : 'create'); 
   const [categoryName, setCategoryName] = useState('');
   const [categoryImage, setCategoryImage] = useState('');
   const [error, setError] = useState({

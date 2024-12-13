@@ -46,7 +46,7 @@ const categoriesSlice = createSlice({
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.status = "succeeded";
 
-        // Debugging logs to check payload and state
+       
         console.log("Action Payload:", action.payload);
         console.log("Current Categories State:", state.categories);
 
@@ -55,7 +55,7 @@ const categoriesSlice = createSlice({
           (c) => c.id === action.payload.id
         );
 
-        console.log("updatedCategoryIndex", updatedCategoryIndex);
+       
         if (updatedCategoryIndex !== -1) {
           // Update the specific category
           state.categories[updatedCategoryIndex] = {
@@ -75,7 +75,6 @@ const categoriesSlice = createSlice({
 const mergeCategories = (localCategories, mockCategories, deletedIds) => {
   const merged = [];
   const localCategoryMap = new Map(localCategories.map((c) => [c.id, c]));
-  console.log({ deletedIds });
 
   for (const mockCategory of mockCategories) {
     if (deletedIds?.includes(mockCategory.id)) {
@@ -85,7 +84,7 @@ const mergeCategories = (localCategories, mockCategories, deletedIds) => {
     const existingLocalCategory = localCategoryMap.get(mockCategory.id);
 
     if (existingLocalCategory) {
-      // Combine mockCategory and localCategory properties (including id)
+     
       merged.push({
         ...mockCategory,
         isActive: existingLocalCategory.isActive,
@@ -95,7 +94,7 @@ const mergeCategories = (localCategories, mockCategories, deletedIds) => {
       merged.push(mockCategory);
     }
   }
-  // deletedIds?.includes(mockCategory.id)
+  
   const filteredLocalCategories = localCategories.filter((localCategory) => {
     return !mockCategories.some(
       (mockCategory) => mockCategory.id === localCategory.id

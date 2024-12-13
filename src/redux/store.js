@@ -14,7 +14,7 @@ const store = configureStore({
         orders: ordersSlice,
         productsWithOrders: productsWithOrdersSlice
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware(), // This line configures thunk
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(), 
 });
 
 export default store;

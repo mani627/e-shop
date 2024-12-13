@@ -21,21 +21,26 @@ import {
 import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
 
 const ProductPage = () => {
- 
+
   const { categoryId } = useParams();
-  const data = useSelector(selectAllProducts)?.filter(
-    (item) => item.categoryId === +categoryId
-  );
+  const data = useSelector(selectAllProducts)
+    ?.filter(
+      (item) => item.categoryId === +categoryId
+    );
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const cartItems = useSelector(selectCartItems);
 
+
+
   useEffect(() => {
-    // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
-    if (categoryId) {
-     // dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
+
+    if (data.length === 0) {
+      dispatch(fetchProducts(null))
+
     }
   }, [dispatch, categoryId]);
 
@@ -52,7 +57,7 @@ const ProductPage = () => {
   }
 
   const findByCart = (product) => {
-    // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
+
 
     return cartItems.find(
       (item) => item.id === product.id && product.categoryId === item.categoryId
@@ -86,7 +91,7 @@ const ProductPage = () => {
       {(data.length !== 0 || data) && (
         <Grid container spacing={3}>
           {data
-            .filter((product) => product.isActive) // Show only active products
+            .filter((product) => product.isActive) 
             .map((product) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
                 <Card
@@ -105,7 +110,7 @@ const ProductPage = () => {
                     image={product.imageUrl}
                     alt={product.name}
                     onError={(e) => {
-                      e.target.onerror = null; // Prevent infinite loop
+                      e.target.onerror = null; 
                       e.target.src = fallback; // Use fallback image
                     }}
                   />

@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -17,16 +18,21 @@ import { useNavigate } from "react-router-dom";
 import fallback from "../assets/images/fallback.png";
 import {
   clearCart,
+  removeFromCart,
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
 import { placeOrder } from "../redux/orderSlice";
+import { selectAllProducts } from "../redux/productsSlice";
+import { selectAllCategories } from "../redux/categorySlice";
 
 const CartPage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
-  
+  const data = useSelector(selectAllProducts)
+  const categories = useSelector(selectAllCategories);
+
 
 
 
@@ -43,7 +49,7 @@ const CartPage = () => {
         updateCartItemQuantity({
           id: product.id,
           quantity: product.quantity + 1,
-          categoryId:product.categoryId,
+          categoryId: product.categoryId,
         })
       );
     }
@@ -52,7 +58,7 @@ const CartPage = () => {
     if (product) {
       dispatch(
         updateCartItemQuantity({
-            categoryId:product.categoryId,
+          categoryId: product.categoryId,
           id: product.id,
           quantity: product.quantity - 1,
         })
@@ -61,11 +67,11 @@ const CartPage = () => {
   };
 
   const handlePlaceOrder = () => {
-  
+
     dispatch(placeOrder(cartItems)).then(() => {
 
       dispatch(clearCart());
-         navigate('/orders'); // Navigate after placing the order
+      navigate('/orders');
     });
 
   };
@@ -85,7 +91,7 @@ const CartPage = () => {
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={3}>
-        {/* Left Side: 70% - Cart Items */}
+
         <Grid item xs={12} md={7}>
           <Typography variant="h5" gutterBottom>
             Cart Items
@@ -96,8 +102,8 @@ const CartPage = () => {
                 <Grid item xs={4}>
                   <CardMedia
                     onError={(e) => {
-                      e.target.onerror = null; // Prevent infinite loop
-                      e.target.src = fallback; // Use fallback image
+                      e.target.onerror = null;
+                      e.target.src = fallback;
                     }}
                     component="img"
                     image={item.imageUrl}
@@ -141,6 +147,29 @@ const CartPage = () => {
                         </IconButton>
                       </Box>
                     </Box>
+                    <Typography variant="body1">
+                      {data.some(productItem => productItem.id === item.id && !productItem.isActive) ||
+                        categories.some(categoriesItem => categoriesItem.id === item.categoryId && !categoriesItem.isActive)
+                        ?
+                        <>
+                          <Chip
+
+                            label="Out of Stock"
+                            color="error"
+                            variant="fill"
+                          />&nbsp;&nbsp;
+
+                          <Chip
+                            onClick={() => { dispatch(removeFromCart(item.id)); }}
+                            sx={{ cursor: "pointer" }}
+                            label="Remove"
+                            color="info"
+                            variant="outlined"
+                          /></>
+                        : null}
+                    </Typography>
+
+
                   </CardContent>
                 </Grid>
               </Grid>

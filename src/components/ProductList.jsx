@@ -38,14 +38,14 @@ const ProductList = () => {
   );
 
 
-  const [open, setOpen] = useState(false); // State for dialog
-  const [selectedProductId, setSelectedProductId] = useState(null); // Track product to delete
+  const [open, setOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-  useEffect(() => {
-    if (categoryId) {
-      // dispatch(fetchProducts(categoryId));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (categoryId) {
+  //     // dispatch(fetchProducts(categoryId));
+  //   }
+  // }, []);
 
   const handleAddProduct = () => {
     navigate(`/products/create/${categoryId}`);
@@ -57,7 +57,7 @@ const ProductList = () => {
 
   const handleDelete = (productId) => {
     dispatch(deleteProduct(productId));
-    setOpen(false); // Close dialog after deletion
+    setOpen(false);
   };
 
   const handleToggleActive = (productId) => {
@@ -65,13 +65,13 @@ const ProductList = () => {
   };
 
   const confirmDelete = (productId) => {
-    setSelectedProductId(productId); // Set product to delete
-    setOpen(true); // Open dialog
+    setSelectedProductId(productId);
+    setOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false); // Close dialog
-    setSelectedProductId(null); // Reset product
+    setOpen(false);
+    setSelectedProductId(null);
   };
 
   return (
@@ -84,7 +84,7 @@ const ProductList = () => {
           marginBottom: "20px",
         }}
       >
-        <Typography variant="h6">Category List</Typography>
+        <Typography variant="h6">Product List</Typography>
         <Button variant="contained" color="primary" onClick={handleAddProduct}>
           Add Product
         </Button>
@@ -122,7 +122,7 @@ const ProductList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {   products.map((product) => (
+            {products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
                   <img
@@ -162,11 +162,11 @@ const ProductList = () => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            )) }
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
-{products.length==0&&<Typography variant="h6" sx={{display:"flex",width:"100%", justifyContent:"center", marginTop:"10%"}}>No Product List</Typography> }
+      {products.length == 0 && <Typography variant="h6" sx={{ display: "flex", width: "100%", justifyContent: "center", marginTop: "10%" }}>No Product List</Typography>}
       {/* Confirmation Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>

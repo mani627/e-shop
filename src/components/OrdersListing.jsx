@@ -20,14 +20,14 @@ const OrdersListing = () => {
   const products = useSelector(selectAllProducts);
 
 
-  
-  useEffect(()=>{
-    
-    dispatch(addProductsWithOrders(products));
-  },[])
 
-  
-  
+  useEffect(() => {
+
+    dispatch(addProductsWithOrders(products));
+  }, [])
+
+
+
 
   // Function to calculate the total amount for an order's items
   const calculateOrderTotal = (items) =>
@@ -46,7 +46,7 @@ const OrdersListing = () => {
   }
   return (
     <Box sx={{ padding: 3 }}>
-      <Grid container sx={{ width:"80%"}} spacing={3}>
+      <Grid container sx={{ width: "80%" }} spacing={3}>
         {orderList.map((order) => (
           <Grid item xs={12} key={order.orderId}>
             <Card sx={{ padding: 2 }}>
@@ -79,9 +79,9 @@ const OrdersListing = () => {
                     image={item.imageUrl}
                     alt={item.name}
                     onError={(e) => {
-                        e.target.onerror = null; // Prevent infinite loop
-                        e.target.src = fallback; // Use fallback image
-                      }}
+                      e.target.onerror = null; 
+                      e.target.src = fallback; // Use fallback image
+                    }}
                     sx={{
                       height: 80,
                       width: 80,

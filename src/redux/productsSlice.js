@@ -27,7 +27,7 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { products, productsWithOrders } = action.payload;
-        console.log("logic", products, productsWithOrders);
+      
 
         state.products = products
           .filter((product) => !state.deleteProductId.includes(product.id))
@@ -57,12 +57,12 @@ const productsSlice = createSlice({
         
         const index = state.products.findIndex(
           (p) => {
-console.log("index",p.id,+action.payload.id);
+
 
            return p.id === +action.payload.id
           }
         );
-      //  console.log({index},+action.payload.id);
+      
         
         if (index !== -1) {
           state.products[index] = action.payload;
@@ -94,7 +94,7 @@ export const fetchProducts = createAsyncThunk(
     const existStateProducts = getState().products;
     const deleteProductIds = existStateProducts.deleteProductId; // Access deleted product IDs
 
-    console.log("sds",existStateProducts.products);
+
     
     let products = await mockApi.fetchProducts(categoryId);
 
@@ -102,17 +102,17 @@ export const fetchProducts = createAsyncThunk(
       return products.map((product) => {
         // Find the matching product in the exist array
         const matchingProduct = exist.find((item) => item.id === product.id);
-        // If found, replace the product; otherwise, keep the original
+        
         return matchingProduct ? matchingProduct : product;
       });
     }
 
-    // Update products and filter out deleted ones
+  
     products = updateProducts(products, existStateProducts.products).filter(
       (product) => !deleteProductIds.includes(product.id)
     );
 
-    return { products, productsWithOrders }; // Combine data
+    return { products, productsWithOrders }; 
   }
 );
 

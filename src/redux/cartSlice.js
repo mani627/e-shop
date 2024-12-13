@@ -2,16 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const cartSlice = createSlice({
     name: 'cart',
-    initialState: { items: [
-    
-        
-    ] },
+    initialState: {
+        items: [
+
+
+        ]
+    },
     reducers: {
         addToCart: (state, action) => {
-            const existingItem = state.items.find(item => item.id === action.payload.id && action.payload.categoryId===item.categoryId);
-           console.log({existingItem});
-           
-           
+            const existingItem = state.items.find(item => item.id === action.payload.id && action.payload.categoryId === item.categoryId);
+
+
+
             if (existingItem) {
                 existingItem.quantity = Math.min(existingItem.quantity + 1, action.payload.stock); // Limit to stock
             } else {
@@ -22,7 +24,7 @@ const cartSlice = createSlice({
             state.items = state.items.filter(item => item.id !== action.payload);
         },
         updateCartItemQuantity: (state, action) => {
-            const item = state.items.find(item => item.id === action.payload.id && action.payload.categoryId===item.categoryId);
+            const item = state.items.find(item => item.id === action.payload.id && action.payload.categoryId === item.categoryId);
             if (item) {
                 item.quantity = Math.min(action.payload.quantity, item.stock);
                 if (item.quantity === 0) {

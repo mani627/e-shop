@@ -80,7 +80,7 @@ const CategoryList = () => {
   };
 
   const handleConfirmDelete = () => {
-    console.log("Deleted Category ID:", selectedCategoryId);
+   
     setDeleteDialogOpen(false);
     dispatch(deleteCategory(selectedCategoryId));
     setReload(!reload);

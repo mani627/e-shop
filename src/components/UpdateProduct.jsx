@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   createProduct,
-    fetchProducts,
-    selectAllProducts,
-    updateProduct
+  fetchProducts,
+  selectAllProducts,
+  updateProduct
 } from "../redux/productsSlice";
 
 const UpdateProduct = () => {
@@ -22,6 +22,7 @@ const UpdateProduct = () => {
   const product = useSelector(selectAllProducts)?.filter(
     (item) => item.id === +id
   );
+  const allProducts = useSelector(selectAllProducts)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -33,16 +34,17 @@ const UpdateProduct = () => {
 
   const [errors, setErrors] = useState({});
 
-  const isUpdateMode = Boolean(id)&&categoryId;
+  const isUpdateMode = Boolean(id) && categoryId;
 
 
-  useEffect(() => {
-    if (isUpdateMode) {
-     // dispatch(fetchProducts(null));
-    }
-  }, [id, dispatch]);
 
-  
+  // useEffect(() => {
+  //   if (isUpdateMode) {
+     
+  //   }
+  // }, [id, dispatch]);
+
+
   useEffect(() => {
     if (isUpdateMode && product[0]) {
       const { name, description, price, stock, imageUrl } = product[0];
@@ -58,6 +60,10 @@ const UpdateProduct = () => {
 
   const validate = () => {
     const newErrors = {};
+
+    if (allProducts.some((product) => product.name.toLowerCase() === formData.name.toLowerCase())) {
+      newErrors.name = "Product name must be unique.";
+    }
     if (!formData.name.trim()) {
       newErrors.name = "Name is required.";
     }
@@ -104,21 +110,21 @@ const UpdateProduct = () => {
     e.preventDefault();
     if (!validate()) return;
     const updateProductForm = { ...product[0], ...formData };
-    
+
 
     if (isUpdateMode) {
-     
-     updateProductForm.id=+id
-     updateProductForm.categoryId=+categoryId
-     console.log({updateProductForm});
-     
-       dispatch(updateProduct(updateProductForm));
+
+      updateProductForm.id = +id
+      updateProductForm.categoryId = +categoryId
+    
+
+      dispatch(updateProduct(updateProductForm));
     } else {
-      updateProductForm.categoryId=+id
-      updateProductForm. isActive= true
-     
+      updateProductForm.categoryId = +id
+      updateProductForm.isActive = true
+
       dispatch(createProduct(updateProductForm));
-      
+
     }
 
     navigate(`/products/list/${+categoryId || id}`);

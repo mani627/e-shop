@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const productsWithOrdersSlice = createSlice({
     name: 'productsWithOrders',
-    initialState: [], // Initialize as an empty array
+    initialState: [], 
     reducers: {
         addProductsWithOrders: (state, action) => {
             if (Array.isArray(action.payload)) {
@@ -39,10 +39,10 @@ const productsWithOrdersSlice = createSlice({
         fetchProductById: (state, action) => {
             const product = state.find(p => p.id === action.payload.id);
             if (product) {
-                return [product]; // Return the product in an array to maintain consistency
+                return [product]; 
             }
             console.error(`Product with id ${action.payload.id} not found.`);
-            return state; // If not found, return the unchanged state
+            return state; 
         }
     },
 });
