@@ -11,14 +11,32 @@ import {
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
+import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const ItemDescription = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+
   const products = useSelector(selectAllProducts);
+
+
   const navigate = useNavigate();
-  const product = products.find((item) => item.id === +productId);
+  const productSpecific = products.find((item) => item.id === +productId);
+
+  const productsWithOrdersData = useSelector(selectProductsWithOrders);
+  
+  const product = updateTotalWithOrder([productSpecific], productsWithOrdersData)[0]
+
+  
+  function updateTotalWithOrder(total, order) {
+    return total.map(totalItem => {
+      const matchingOrderItem = order.find(orderItem => orderItem.id === totalItem.id);
+      
+      return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
+    });
+  }
+
 
   useEffect(() => {
     if (!product) {

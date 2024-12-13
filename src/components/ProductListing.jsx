@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import fallback from "../assets/images/fallback.png"; // Import fallback image
-import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
+import { fetchProducts, selectAllProducts, stockUpdate } from "../redux/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -22,10 +22,11 @@ import {
 import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const ProductPage = () => {
-//  const [data, setData] = useState(useSelector(selectAllProducts))
+
   const product = useSelector(selectAllProducts);
+  
   const productsWithOrdersData = useSelector(selectProductsWithOrders);
-const data=updateTotalWithOrder(product, productsWithOrdersData)
+  const data = updateTotalWithOrder(product, productsWithOrdersData)
 
   const { categoryId } = useParams();
   const dispatch = useDispatch();
@@ -33,11 +34,13 @@ const data=updateTotalWithOrder(product, productsWithOrdersData)
 
   const cartItems = useSelector(selectCartItems);
 
-  console.log("right", productsWithOrdersData, "left", data);
+
+
 
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
     if (categoryId) {
+     
       dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
     }
   }, [dispatch, categoryId]);
@@ -51,22 +54,9 @@ const data=updateTotalWithOrder(product, productsWithOrdersData)
       return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
     });
   }
-  useEffect(() => {
-    
+  
 
-  }, [])
-
-
-  useEffect(() => {
-
-    if (data.length === 0 || !data) {
-      
-      navigate("/");
-    }
-  }, []);
-
-
-
+ 
   const findByCart = (product) => {
     // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
 
@@ -91,6 +81,7 @@ const data=updateTotalWithOrder(product, productsWithOrdersData)
     }
   };
 
+console.log({data});
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -156,6 +147,7 @@ const data=updateTotalWithOrder(product, productsWithOrdersData)
                       </Box>
                     ) : (
                       <Button
+                      disabled={product.stock===0}
                         variant="contained"
                         color="primary"
                         onClick={() => handleIncrement(product)}

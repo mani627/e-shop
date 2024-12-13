@@ -18,7 +18,11 @@ const OrdersListing = () => {
   const dispatch = useDispatch();
   const orderList = useSelector(selectAllOrders);
   const products = useSelector(selectAllProducts);
+
+
+  
   useEffect(()=>{
+    
     dispatch(addProductsWithOrders(products));
   },[])
 

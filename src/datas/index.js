@@ -18,6 +18,7 @@ export default {
   updateCategory: (category) =>
     Promise.resolve({ ...category, isActive: true }),
   deleteCategory: (id) => Promise.resolve(),
+  
   fetchProducts: (categoryId) =>
     Promise.resolve([
       {

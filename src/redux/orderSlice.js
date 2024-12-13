@@ -82,6 +82,8 @@ export const placeOrder = createAsyncThunk(
     // }
 
     const order = await mockApi.placeOrder(cartItems);
+    
+    
     return { ...order, items: cartItems };
   }
 );

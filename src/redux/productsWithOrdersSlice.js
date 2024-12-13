@@ -35,10 +35,26 @@ const productsWithOrdersSlice = createSlice({
         },
         removeProductWithOrder: (state, action) => {
             return state.filter(product => product.id !== action.payload);
+        },
+        fetchProductById: (state, action) => {
+            const product = state.find(p => p.id === action.payload.id);
+            if (product) {
+                return [product]; // Return the product in an array to maintain consistency
+            }
+            console.error(`Product with id ${action.payload.id} not found.`);
+            return state; // If not found, return the unchanged state
         }
     },
 });
 
-export const { addProductsWithOrders, updateProductWithOrder, removeProductWithOrder } = productsWithOrdersSlice.actions;
+export const { 
+    addProductsWithOrders, 
+    updateProductWithOrder, 
+    removeProductWithOrder, 
+    fetchProductById 
+} = productsWithOrdersSlice.actions;
+
 export const selectProductsWithOrders = (state) => state.productsWithOrders;
+export const selectProductById = (state, id) => state.productsWithOrders?.find(product => product.id === id);
+
 export default productsWithOrdersSlice.reducer;

@@ -3,18 +3,7 @@ import { placeOrder } from "./orderSlice";
 import mockApi from "../datas/index"
 import { addProductsWithOrders } from "./productsWithOrdersSlice";
 
-// Mock API (replace with your actual API calls)
-// const mockApi = {
-//     fetchCategories: () => Promise.resolve([{ id: 1, name: 'Category 1', imageUrl: 'url1', isActive: true }, { id: 2, name: 'Category 2', imageUrl: 'url2', isActive: false }]),
-//     createCategory: (category) => Promise.resolve({ ...category, id: Date.now() }),
-//     updateCategory: (category) => Promise.resolve(category),
-//     deleteCategory: (id) => Promise.resolve(),
-//     fetchProducts: (categoryId) => Promise.resolve([{ id: 1, name: 'Product 1', description: 'desc', stock: 10, price: 20, imageUrl: 'purl1', categoryId: categoryId, isActive: true, sales: 0 }, { id: 2, name: 'Product 2', description: 'desc2', stock: 5, price: 30, imageUrl: 'purl2', categoryId: categoryId, isActive: false, sales: 0 }]),
-//       createProduct: (product) => Promise.resolve({ ...product,isActive:true, id: Date.now(), sales: 0 }),
-//       updateProduct: (product) => Promise.resolve(product),
-//       deleteProduct: (id) => Promise.resolve(),
-//     placeOrder: (cartItems) => Promise.resolve({ orderId: Date.now() }),
-//   };
+
 
 const productsSlice = createSlice({
     name: 'products',
@@ -26,6 +15,7 @@ const productsSlice = createSlice({
                 product.isActive = !product.isActive;
             }
         },
+       
     },
     extraReducers: (builder) => {
         builder
@@ -33,26 +23,12 @@ const productsSlice = createSlice({
 
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                // Only add new products if the state is empty
-                if (state.products.length === 0) {
-                    state.products = action.payload;
-                } else {
-                    state.products = action.payload.map((newProduct) => {
-                        const existingProduct = state.products.find((product) => product.id === newProduct.id);
-
-
-                        if (existingProduct) {
-                            return newProduct;
-                        }
-
-
-                        return newProduct;
-                    });
-                }
-
-
-
-
+                const { products, productsWithOrders } = action.payload;
+            
+                state.products = products.map((newProduct) => {
+                    const updatedProduct = productsWithOrders.find((p) => p.id === newProduct.id);
+                    return updatedProduct ? { ...newProduct, ...updatedProduct } : newProduct;
+                });
             })
 
             .addCase(fetchProducts.rejected, (state, action) => { state.status = 'failed'; state.error = action.error.message; })
@@ -70,24 +46,31 @@ const productsSlice = createSlice({
             .addCase(placeOrder.fulfilled, (state, action) => {
                 action.payload.items.forEach(orderedItem => {
                     const product = state.products.find(p => p.id === orderedItem.id);
+                    console.log("bb",JSON.parse(JSON.stringify(state)),action.payload.items);
+                    
                     if (product) {
                         product.stock -= orderedItem.quantity;
                         product.sales += orderedItem.quantity * product.price; // Increment sales
                     }
+                    console.log("uu",action.payload.items);
+                    
                 });
 
-
+                console.log("Updated State After Update:", JSON.parse(JSON.stringify(state))); // Check the updated state
                 // dispatch(addProductsWithOrders(state.products));
 
             });
     },
 });
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (categoryId) => {
-
-
-    return await mockApi.fetchProducts(categoryId);
-});
+export const fetchProducts = createAsyncThunk(
+    'products/fetchProducts',
+    async (categoryId, { getState }) => {
+        const productsWithOrders = getState().productsWithOrders; // Access productsWithOrders slice
+        const products = await mockApi.fetchProducts(categoryId);
+        return { products, productsWithOrders }; // Combine data
+    }
+);
 export const createProduct = createAsyncThunk('products/createProduct', async (product) => {
     return await mockApi.createProduct(product);
 });
@@ -102,6 +85,6 @@ export const deleteProduct = createAsyncThunk('products/deleteProduct', async (i
     return id;
 });
 
-export const { toggleProductStatus } = productsSlice.actions;
+export const { toggleProductStatus,stockUpdate } = productsSlice.actions;
 export const selectAllProducts = (state) => state.products.products;
 export default productsSlice.reducer;
