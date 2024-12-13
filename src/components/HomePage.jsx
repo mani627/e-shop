@@ -29,10 +29,12 @@ const HomePage = () => {
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         Categories
       </Typography>
-
+{data.length===0&& <Typography mt={5} variant="h4" component="h2" gutterBottom textAlign="center">
+      No Categories !!!
+      </Typography>}
       {/* Category Grid */}
       <Grid container spacing={3}>
-        {data
+        {  data
           .filter((category) => category.isActive) // Show only active categories
           .map((category) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={category.id}>
@@ -61,8 +63,9 @@ const HomePage = () => {
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+          )) }
       </Grid>
+
     </Box>
   );
 };

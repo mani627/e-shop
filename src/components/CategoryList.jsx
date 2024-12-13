@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
-  Typography,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Button,
-  Switch,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   deleteCategory,
   fetchCategories,
   selectAllCategories,
   toggleCategoryStatus,
 } from "../redux/categorySlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
@@ -38,11 +38,13 @@ const CategoryList = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [reload, setReload] = useState(false);
   const navigate = useNavigate();
+ 
 
   useEffect(() => {
     dispatch(fetchCategories());
-
-    dispatch(fetchProducts(null));
+    if (productList.length === 0) {
+       dispatch(fetchProducts(null));
+    }
   }, [reload]);
 
   const getCategoryData = () => {
@@ -178,6 +180,7 @@ const CategoryList = () => {
             ))}
           </TableBody>
         </Table>
+        {categoryData.length===0&&<Typography variant="h6" sx={{display:"flex", justifyContent:"center", padding:"5%"}}>No Category List</Typography>}
       </TableContainer>
 
       {/* Delete Confirmation Dialog */}

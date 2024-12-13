@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import fallback from "../assets/images/fallback.png"; // Import fallback image
-import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import fallback from "../assets/images/fallback.png"; // Import fallback image
 import {
   addToCart,
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
-import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
+import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
 
 const ProductPage = () => {
-  const data = useSelector(selectAllProducts);
-
+ 
   const { categoryId } = useParams();
+  const data = useSelector(selectAllProducts)?.filter(
+    (item) => item.categoryId === +categoryId
+  );
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ const ProductPage = () => {
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
     if (categoryId) {
-      dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
+     // dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
     }
   }, [dispatch, categoryId]);
 

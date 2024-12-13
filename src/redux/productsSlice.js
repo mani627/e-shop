@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { placeOrder } from "./orderSlice";
 import mockApi from "../datas/index";
-import { addProductsWithOrders } from "./productsWithOrdersSlice";
+import { placeOrder } from "./orderSlice";
 
 const productsSlice = createSlice({
   name: "products",
@@ -54,9 +53,17 @@ const productsSlice = createSlice({
         state.products.push(action.payload);
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
+        
+        
         const index = state.products.findIndex(
-          (p) => p.id === action.payload.id
+          (p) => {
+console.log("index",p.id,+action.payload.id);
+
+           return p.id === +action.payload.id
+          }
         );
+      //  console.log({index},+action.payload.id);
+        
         if (index !== -1) {
           state.products[index] = action.payload;
         }
@@ -87,6 +94,8 @@ export const fetchProducts = createAsyncThunk(
     const existStateProducts = getState().products;
     const deleteProductIds = existStateProducts.deleteProductId; // Access deleted product IDs
 
+    console.log("sds",existStateProducts.products);
+    
     let products = await mockApi.fetchProducts(categoryId);
 
     function updateProducts(products, exist) {
@@ -117,6 +126,8 @@ export const createProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async (product) => {
+
+   
     return await mockApi.updateProduct(product);
   }
 );

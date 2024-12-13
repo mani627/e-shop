@@ -1,52 +1,58 @@
-import React, { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Button,
-  IconButton,
   Typography,
-  Box,
-  Switch,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, fetchProducts, selectAllProducts, toggleProductStatus } from "../redux/productsSlice";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  deleteProduct,
+  fetchProducts,
+  selectAllProducts,
+  toggleProductStatus,
+} from "../redux/productsSlice";
 
 const ProductList = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const dispatch = useDispatch();
-  const products = useSelector(selectAllProducts);
+  const products = useSelector(selectAllProducts)?.filter(
+    (item) => item.categoryId === +categoryId
+  );
+
 
   const [open, setOpen] = useState(false); // State for dialog
   const [selectedProductId, setSelectedProductId] = useState(null); // Track product to delete
 
   useEffect(() => {
     if (categoryId) {
-      dispatch(fetchProducts(categoryId));
+      // dispatch(fetchProducts(categoryId));
     }
-  }, [dispatch, categoryId]);
+  }, []);
 
   const handleAddProduct = () => {
-    console.log("Add product clicked");
+    navigate(`/products/create/${categoryId}`);
   };
 
   const handleEdit = (productId) => {
-    
-    navigate(`/products/update/${productId}`);
-    
+    navigate(`/products/update/${productId}`, { state: { categoryId } });
   };
 
   const handleDelete = (productId) => {
@@ -116,7 +122,7 @@ const ProductList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
+            {   products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
                   <img
@@ -156,17 +162,18 @@ const ProductList = () => {
                   </IconButton>
                 </TableCell>
               </TableRow>
-            ))}
+            )) }
           </TableBody>
         </Table>
       </TableContainer>
-
+{products.length==0&&<Typography variant="h6" sx={{display:"flex",width:"100%", justifyContent:"center", marginTop:"10%"}}>No Product List</Typography> }
       {/* Confirmation Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this product? This action cannot be undone.
+            Are you sure you want to delete this product? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

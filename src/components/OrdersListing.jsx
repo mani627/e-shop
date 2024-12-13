@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
 import {
   Box,
-  Grid,
-  Typography,
   Card,
   CardContent,
   CardMedia,
   Divider,
+  Grid,
+  Typography,
 } from "@mui/material";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import fallback from "../assets/images/fallback.png";
 import { selectAllOrders } from "../redux/orderSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { selectAllProducts } from "../redux/productsSlice";
 import { addProductsWithOrders } from "../redux/productsWithOrdersSlice";
 

@@ -1,16 +1,21 @@
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Typography, Grid } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   createProduct,
-  updateProduct,
-  fetchProducts,
-  selectAllProducts,
+    fetchProducts,
+    selectAllProducts,
+    updateProduct
 } from "../redux/productsSlice";
 
 const UpdateProduct = () => {
-  const { id, categoryId } = useParams();
+  const { id } = useParams();
+
+  const location = useLocation();
+  const { categoryId } = location.state || {}; // Access the passed state
+
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,15 +33,16 @@ const UpdateProduct = () => {
 
   const [errors, setErrors] = useState({});
 
-  const isUpdateMode = Boolean(id);
+  const isUpdateMode = Boolean(id)&&categoryId;
+
 
   useEffect(() => {
     if (isUpdateMode) {
-      dispatch(fetchProducts(null));
+     // dispatch(fetchProducts(null));
     }
   }, [id, dispatch]);
 
-  console.log("vbv", product, id, isUpdateMode, product);
+  
   useEffect(() => {
     if (isUpdateMode && product[0]) {
       const { name, description, price, stock, imageUrl } = product[0];
@@ -98,15 +104,24 @@ const UpdateProduct = () => {
     e.preventDefault();
     if (!validate()) return;
     const updateProductForm = { ...product[0], ...formData };
-    console.log({ updateProductForm });
+    
 
     if (isUpdateMode) {
+     
+     updateProductForm.id=+id
+     updateProductForm.categoryId=+categoryId
+     console.log({updateProductForm});
+     
        dispatch(updateProduct(updateProductForm));
     } else {
-      //  dispatch(createProduct({ categoryId, ...formData }));
+      updateProductForm.categoryId=+id
+      updateProductForm. isActive= true
+     
+      dispatch(createProduct(updateProductForm));
+      
     }
 
-    navigate("/products");
+    navigate(`/products/list/${+categoryId || id}`);
   };
 
   return (

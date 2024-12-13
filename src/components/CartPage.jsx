@@ -1,29 +1,26 @@
-import React, { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import {
   Box,
-  Grid,
-  Typography,
+  Button,
   Card,
   CardContent,
   CardMedia,
   Divider,
-  Button,
+  Grid,
   IconButton,
+  Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import fallback from "../assets/images/fallback.png";
 import {
   clearCart,
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import fallback from "../assets/images/fallback.png";
-import { placeOrder, selectAllOrders } from "../redux/orderSlice";
-import { selectAllCategories } from "../redux/categorySlice";
-import { selectAllProducts } from "../redux/productsSlice";
-import { useNavigate } from "react-router-dom";
-import { addProductsWithOrders } from "../redux/productsWithOrdersSlice";
+import { placeOrder } from "../redux/orderSlice";
 
 const CartPage = () => {
     const navigate = useNavigate();

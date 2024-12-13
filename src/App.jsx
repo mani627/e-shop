@@ -2,16 +2,9 @@
 // A full implementation would require significantly more code, including API integration,
 // robust error handling, and more detailed styling.
 
-import React, { lazy, Suspense, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-  Router,
-  BrowserRouter,
-} from "react-router-dom";
+import React, { lazy, Suspense } from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 // import {
 //   incrementItem,
 //   decrementItem,
@@ -32,31 +25,10 @@ import {
 //   deleteProduct,
 // } from './productSlice'; // Create this slice
 import "./index.css"; // Import your Tailwind CSS
-import {
-  createCategory,
-  deleteCategory,
-  fetchCategories,
-  selectAllCategories,
-  toggleCategoryStatus,
-  updateCategory,
-} from "./redux/categorySlice";
-import {
-  createProduct,
-  deleteProduct,
-  fetchProducts,
-  selectAllProducts,
-  toggleProductStatus,
-  updateProduct,
-} from "./redux/productsSlice";
-import {
-  addToCart,
-  clearCart,
-  removeFromCart,
-  selectCartItems,
-  updateCartItemQuantity,
-} from "./redux/cartSlice";
-import { placeOrder, selectAllOrders } from "./redux/orderSlice";
-import { addProductsWithOrders, selectProductsWithOrders } from "./redux/productsWithOrdersSlice";
+import { selectAllCategories } from "./redux/categorySlice";
+import { selectAllOrders } from "./redux/orderSlice";
+import { selectAllProducts } from "./redux/productsSlice";
+import { selectProductsWithOrders } from "./redux/productsWithOrdersSlice";
 
 // const Header = () => {
 //   const cart = useSelector((state) => state.cart.items);
@@ -107,28 +79,25 @@ const ProductListing = lazy(() => import("./components/ProductListing"));
 const ItemDescription = lazy(() => import("./components/ItemDescription"));
 const CartPage = lazy(() => import("./components/CartPage"));
 const OrdersListing = lazy(() => import("./components/OrdersListing"));
-const CategoryList = lazy(() => import('./components/CategoryList'));
+const CategoryList = lazy(() => import("./components/CategoryList"));
 //  const CreateCategory = lazy(() => import('./components/CreateCategory'));
-const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
-const ProductList = lazy(() => import('./components/ProductList'));
+const UpdateCategory = lazy(() => import("./components/UpdateCategory"));
+const ProductList = lazy(() => import("./components/ProductList"));
 // const CreateProduct = lazy(() => import('./components/CreateProduct'));
-const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
+const UpdateProduct = lazy(() => import("./components/UpdateProduct"));
 const App = () => {
-
   const orders = useSelector(selectAllOrders);
   const productsWithOrdersData = useSelector(selectProductsWithOrders);
   const products = useSelector(selectAllProducts);
   const categories = useSelector(selectAllCategories);
-     
-      
+
   //console.log("products",products, "orders",orders,"final",productsWithOrdersData);
-  
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Header />
         <Routes>
-
           {/* create orders */}
           <Route path="/" element={<HomePage />} />
           <Route path="/products/:categoryId" element={<ProductListing />} />
@@ -137,14 +106,14 @@ const App = () => {
           <Route path="/orders" element={<OrdersListing />} />
 
           {/* Category Manipulation */}
-         <Route path="/categories" element={<CategoryList />} />
+          <Route path="/categories" element={<CategoryList />} />
           <Route path="/categories/create" element={<UpdateCategory />} />
           <Route path="/categories/update/:id" element={<UpdateCategory />} />
 
           {/* Product Manipulation */}
           <Route path="/products/list/:categoryId" element={<ProductList />} />
-          <Route path="/products/create/:categoryId" element={<UpdateProduct />} />
-          <Route path="/products/update/:id" element={<UpdateProduct />} />   
+          <Route path="/products/create/:id" element={<UpdateProduct />} />
+          <Route path="/products/update/:id" element={<UpdateProduct />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

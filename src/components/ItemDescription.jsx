@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, CardMedia, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import fallback from "../assets/images/fallback.png"; // Import fallback image
-import { useNavigate, useParams } from "react-router-dom";
+import { Box, CardMedia, Grid, IconButton, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllProducts } from "../redux/productsSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import fallback from "../assets/images/fallback.png"; // Import fallback image
 import {
   addToCart,
   selectCartItems,
   updateCartItemQuantity,
 } from "../redux/cartSlice";
+import { selectAllProducts } from "../redux/productsSlice";
 import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const ItemDescription = () => {
