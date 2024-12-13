@@ -108,19 +108,20 @@ const ItemDescription = lazy(() => import("./components/ItemDescription"));
 const CartPage = lazy(() => import("./components/CartPage"));
 const OrdersListing = lazy(() => import("./components/OrdersListing"));
 const CategoryList = lazy(() => import('./components/CategoryList'));
-// const CreateCategory = lazy(() => import('./components/CreateCategory'));
-// const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
-// const ProductList = lazy(() => import('./components/ProductList'));
+//  const CreateCategory = lazy(() => import('./components/CreateCategory'));
+const UpdateCategory = lazy(() => import('./components/UpdateCategory'));
+const ProductList = lazy(() => import('./components/ProductList'));
 // const CreateProduct = lazy(() => import('./components/CreateProduct'));
-// const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
+const UpdateProduct = lazy(() => import('./components/UpdateProduct'));
 const App = () => {
 
   const orders = useSelector(selectAllOrders);
   const productsWithOrdersData = useSelector(selectProductsWithOrders);
   const products = useSelector(selectAllProducts);
-
+  const categories = useSelector(selectAllCategories);
+     
       
-  console.log("products",products, "orders",orders,"final",productsWithOrdersData);
+  //console.log("products",products, "orders",orders,"final",productsWithOrdersData);
   
   return (
     <BrowserRouter>
@@ -137,13 +138,13 @@ const App = () => {
 
           {/* Category Manipulation */}
          <Route path="/categories" element={<CategoryList />} />
-          {/* <Route path="/categories/create" element={<CreateCategory />} />
-          <Route path="/categories/update/:id" element={<UpdateCategory />} /> */}
+          <Route path="/categories/create" element={<UpdateCategory />} />
+          <Route path="/categories/update/:id" element={<UpdateCategory />} />
 
           {/* Product Manipulation */}
-          {/* <Route path="/products/list/:categoryId" element={<ProductList />} />
-          <Route path="/products/create/:categoryId" element={<CreateProduct />} />
-          <Route path="/products/update/:id" element={<UpdateProduct />} />    */}
+          <Route path="/products/list/:categoryId" element={<ProductList />} />
+          <Route path="/products/create/:categoryId" element={<UpdateProduct />} />
+          <Route path="/products/update/:id" element={<UpdateProduct />} />   
         </Routes>
       </Suspense>
     </BrowserRouter>

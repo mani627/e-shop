@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import mockApi from "../datas/index";
 
-
-
 const categoriesSlice = createSlice({
   name: "categories",
   initialState: {
@@ -29,7 +27,11 @@ const categoriesSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.categories = mergeCategories(state.categories, action.payload, state.deletedIds); // Include deletedIds
+        state.categories = mergeCategories(
+          state.categories,
+          action.payload,
+          state.deletedIds
+        ); // Include deletedIds
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = "failed";
@@ -37,20 +39,35 @@ const categoriesSlice = createSlice({
       })
       .addCase(createCategory.fulfilled, (state, action) => {
         state.status = "succeeded";
+        console.log("creating", action.payload);
+
         state.categories.push(action.payload);
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.status = "succeeded";
+
+        // Debugging logs to check payload and state
+        console.log("Action Payload:", action.payload);
+        console.log("Current Categories State:", state.categories);
+
+        // Find the index of the category to update
         const updatedCategoryIndex = state.categories.findIndex(
           (c) => c.id === action.payload.id
         );
+
+        console.log("updatedCategoryIndex", updatedCategoryIndex);
         if (updatedCategoryIndex !== -1) {
-          state.categories[updatedCategoryIndex] = action.payload;
+          // Update the specific category
+          state.categories[updatedCategoryIndex] = {
+            ...state.categories[updatedCategoryIndex],
+            ...action.payload, // Merge the payload with the existing category
+          };
+        } else {
+          console.warn("Category not found for update:", action.payload);
         }
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.deletedIds = [...state.deletedIds, action.payload];
-
       });
   },
 });
@@ -58,20 +75,33 @@ const categoriesSlice = createSlice({
 const mergeCategories = (localCategories, mockCategories, deletedIds) => {
   const merged = [];
   const localCategoryMap = new Map(localCategories.map((c) => [c.id, c]));
+  console.log({ deletedIds });
 
   for (const mockCategory of mockCategories) {
-    if (deletedIds.includes(mockCategory.id)) {
+    if (deletedIds?.includes(mockCategory.id)) {
       continue;
     }
 
     const existingLocalCategory = localCategoryMap.get(mockCategory.id);
+
     if (existingLocalCategory) {
-      merged.push({ ...mockCategory, isActive: existingLocalCategory.isActive });
+      // Combine mockCategory and localCategory properties (including id)
+      merged.push({
+        ...mockCategory,
+        isActive: existingLocalCategory.isActive,
+        ...existingLocalCategory,
+      });
     } else {
       merged.push(mockCategory);
     }
   }
-
+  // deletedIds?.includes(mockCategory.id)
+  const filteredLocalCategories = localCategories.filter((localCategory) => {
+    return !mockCategories.some(
+      (mockCategory) => mockCategory.id === localCategory.id
+    ) &&! deletedIds?.includes(localCategory.id);
+  });
+  merged.push(...filteredLocalCategories);
   return merged;
 };
 
@@ -86,18 +116,14 @@ export const fetchCategories = createAsyncThunk(
 export const createCategory = createAsyncThunk(
   "categories/createCategory",
   async (category, { dispatch }) => {
-    await mockApi.createCategory(category);
-    // Fetch updated categories after creation
-    return await dispatch(fetchCategories()).unwrap();
+    return await mockApi.createCategory(category);
   }
 );
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async (category, { dispatch }) => {
-    await mockApi.updateCategory(category);
-    // Fetch updated categories after update
-    return await dispatch(fetchCategories()).unwrap();
+    return await mockApi.updateCategory(category);
   }
 );
 

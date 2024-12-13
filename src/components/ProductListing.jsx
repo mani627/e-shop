@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import fallback from "../assets/images/fallback.png"; // Import fallback image
-import { fetchProducts, selectAllProducts, stockUpdate } from "../redux/productsSlice";
+import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -22,11 +22,7 @@ import {
 import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 
 const ProductPage = () => {
-
-  const product = useSelector(selectAllProducts);
-
-  const productsWithOrdersData = useSelector(selectProductsWithOrders);
-  const data = updateTotalWithOrder(product, productsWithOrdersData)
+  const data = useSelector(selectAllProducts);
 
   const { categoryId } = useParams();
   const dispatch = useDispatch();
@@ -34,33 +30,31 @@ const ProductPage = () => {
 
   const cartItems = useSelector(selectCartItems);
 
-
-
-
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
     if (categoryId) {
-
       dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
     }
   }, [dispatch, categoryId]);
 
   function updateTotalWithOrder(total, order) {
-    return total.map(totalItem => {
+    return total.map((totalItem) => {
+      const matchingOrderItem = order.find(
+        (orderItem) => orderItem.id === totalItem.id
+      );
 
-      const matchingOrderItem = order.find(orderItem => orderItem.id === totalItem.id);
-
-
-      return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
+      return matchingOrderItem
+        ? { ...totalItem, ...matchingOrderItem }
+        : totalItem;
     });
   }
-
-
 
   const findByCart = (product) => {
     // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
 
-    return cartItems.find((item) => item.id === product.id && product.categoryId === item.categoryId)
+    return cartItems.find(
+      (item) => item.id === product.id && product.categoryId === item.categoryId
+    );
   };
 
   const handleIncrement = (product) => {
@@ -81,13 +75,11 @@ const ProductPage = () => {
     }
   };
 
-
-
   return (
     <Box sx={{ padding: 2 }}>
       {/* Title */}
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-        {(data.length !== 0 )?"Products":"No Products" }  
+        {data.length !== 0 ? "Products" : "No Products"}
       </Typography>
       {(data.length !== 0 || data) && (
         <Grid container spacing={3}>

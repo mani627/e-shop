@@ -1,90 +1,134 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { placeOrder } from "./orderSlice";
-import mockApi from "../datas/index"
+import mockApi from "../datas/index";
 import { addProductsWithOrders } from "./productsWithOrdersSlice";
 
-
-
 const productsSlice = createSlice({
-    name: 'products',
-    initialState: { products: [], status: 'idle', error: null },
-    reducers: {
-        toggleProductStatus: (state, action) => {
-            const product = state.products.find(p => p.id === action.payload);
-            if (product) {
-                product.isActive = !product.isActive;
-            }
-        },
-       
+  name: "products",
+  initialState: {
+    products: [],
+    deleteProductId: [],
+    status: "idle",
+    error: null,
+  },
+  reducers: {
+    toggleProductStatus: (state, action) => {
+      const product = state.products.find((p) => p.id === action.payload);
+      if (product) {
+        product.isActive = !product.isActive;
+      }
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchProducts.pending, (state) => { state.status = 'loading'; })
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.status = "loading";
+      })
 
-            .addCase(fetchProducts.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                const { products, productsWithOrders } = action.payload;
-            
-                state.products = products.map((newProduct) => {
-                    const updatedProduct = productsWithOrders.find((p) => p.id === newProduct.id);
-                    return updatedProduct ? { ...newProduct, ...updatedProduct } : newProduct;
-                });
-            })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { products, productsWithOrders } = action.payload;
+        console.log("logic", products, productsWithOrders);
 
-            .addCase(fetchProducts.rejected, (state, action) => { state.status = 'failed'; state.error = action.error.message; })
-            .addCase(createProduct.fulfilled, (state, action) => { state.products.push(action.payload); })
-            .addCase(updateProduct.fulfilled, (state, action) => {
-                const index = state.products.findIndex((p) => p.id === action.payload.id);
-                if (index !== -1) {
-                    state.products[index] = action.payload;
+        state.products = products
+          .filter((product) => !state.deleteProductId.includes(product.id))
+          .map((newProduct) => {
+            const updatedProduct = productsWithOrders.find(
+              (p) => p.id === newProduct.id
+            );
+            return updatedProduct
+              ? {
+                  ...newProduct,
+                  ...updatedProduct,
+                  isActive: newProduct.isActive,
                 }
-            })
-            .addCase(deleteProduct.fulfilled, (state, action) => {
-                state.products = state.products.filter((p) => p.id !== action.payload);
-            })
-            //deduct stock count when order place
-            .addCase(placeOrder.fulfilled, (state, action) => {
-                action.payload.items.forEach(orderedItem => {
-                    const product = state.products.find(p => p.id === orderedItem.id);
-                    console.log("bb",JSON.parse(JSON.stringify(state)),action.payload.items);
-                    
-                    if (product) {
-                        product.stock -= orderedItem.quantity;
-                        product.sales += orderedItem.quantity * product.price; // Increment sales
-                    }
-                    console.log("uu",action.payload.items);
-                    
-                });
+              : newProduct;
+          });
+      })
 
-                console.log("Updated State After Update:", JSON.parse(JSON.stringify(state))); // Check the updated state
-                // dispatch(addProductsWithOrders(state.products));
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.products.push(action.payload);
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        const index = state.products.findIndex(
+          (p) => p.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        const deletedId = action.payload;
+        state.products = state.products.filter((p) => p.id !== deletedId);
+        state.deleteProductId.push(deletedId); // Maintain deleted product IDs
+      })
+      // Deduct stock count when order is placed
+      .addCase(placeOrder.fulfilled, (state, action) => {
+        action.payload.items.forEach((orderedItem) => {
+          const product = state.products.find((p) => p.id === orderedItem.id);
 
-            });
-    },
+          if (product) {
+            product.stock -= orderedItem.quantity;
+            product.sales += orderedItem.quantity * product.price; // Increment sales
+          }
+        });
+      });
+  },
 });
 
 export const fetchProducts = createAsyncThunk(
-    'products/fetchProducts',
-    async (categoryId, { getState }) => {
-        const productsWithOrders = getState().productsWithOrders; // Access productsWithOrders slice
-        const products = await mockApi.fetchProducts(categoryId);
-        return { products, productsWithOrders }; // Combine data
+  "products/fetchProducts",
+  async (categoryId, { getState }) => {
+    const productsWithOrders = getState().productsWithOrders; // Access productsWithOrders slice
+    const existStateProducts = getState().products;
+    const deleteProductIds = existStateProducts.deleteProductId; // Access deleted product IDs
+
+    let products = await mockApi.fetchProducts(categoryId);
+
+    function updateProducts(products, exist) {
+      return products.map((product) => {
+        // Find the matching product in the exist array
+        const matchingProduct = exist.find((item) => item.id === product.id);
+        // If found, replace the product; otherwise, keep the original
+        return matchingProduct ? matchingProduct : product;
+      });
     }
+
+    // Update products and filter out deleted ones
+    products = updateProducts(products, existStateProducts.products).filter(
+      (product) => !deleteProductIds.includes(product.id)
+    );
+
+    return { products, productsWithOrders }; // Combine data
+  }
 );
-export const createProduct = createAsyncThunk('products/createProduct', async (product) => {
+
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (product) => {
     return await mockApi.createProduct(product);
-});
+  }
+);
 
-export const updateProduct = createAsyncThunk('products/updateProduct', async (product) => {
-    console.log("sdjfhbdsjkf", product.id);
-
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async (product) => {
     return await mockApi.updateProduct(product);
-});
-export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id) => {
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id) => {
     await mockApi.deleteProduct(id);
     return id;
-});
+  }
+);
 
-export const { toggleProductStatus,stockUpdate } = productsSlice.actions;
+export const { toggleProductStatus } = productsSlice.actions;
 export const selectAllProducts = (state) => state.products.products;
 export default productsSlice.reducer;
