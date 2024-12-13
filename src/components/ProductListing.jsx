@@ -24,7 +24,7 @@ import { selectProductsWithOrders } from "../redux/productsWithOrdersSlice";
 const ProductPage = () => {
 
   const product = useSelector(selectAllProducts);
-  
+
   const productsWithOrdersData = useSelector(selectProductsWithOrders);
   const data = updateTotalWithOrder(product, productsWithOrdersData)
 
@@ -40,7 +40,7 @@ const ProductPage = () => {
   useEffect(() => {
     // Example: Fetch products when a category is selected (you'll need to pass the categoryId)
     if (categoryId) {
-     
+
       dispatch(fetchProducts(categoryId)); // Fetch for the first category initially
     }
   }, [dispatch, categoryId]);
@@ -54,9 +54,9 @@ const ProductPage = () => {
       return matchingOrderItem ? { ...totalItem, ...matchingOrderItem } : totalItem;
     });
   }
-  
 
- 
+
+
   const findByCart = (product) => {
     // console.log("filter",cartItems.find((item) => item.id === product.id && product.categoryId===item.categoryId ));
 
@@ -81,13 +81,13 @@ const ProductPage = () => {
     }
   };
 
-console.log({data});
+
 
   return (
     <Box sx={{ padding: 2 }}>
       {/* Title */}
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-        Products
+        {(data.length !== 0 )?"Products":"No Products" }  
       </Typography>
       {(data.length !== 0 || data) && (
         <Grid container spacing={3}>
@@ -147,7 +147,7 @@ console.log({data});
                       </Box>
                     ) : (
                       <Button
-                      disabled={product.stock===0}
+                        disabled={product.stock === 0}
                         variant="contained"
                         color="primary"
                         onClick={() => handleIncrement(product)}

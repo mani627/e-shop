@@ -21,7 +21,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { fetchProducts, selectAllProducts } from "../redux/productsSlice";
-import { fetchCategories, selectAllCategories } from "../redux/categorySlice";
+import { deleteCategory, fetchCategories, selectAllCategories, toggleCategoryStatus } from "../redux/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -39,7 +39,7 @@ import { useDispatch, useSelector } from "react-redux";
 //       isActive: true,
 //     },
 //   ];
-  
+
 //   const productList = [
 //     {
 //       id: 1,
@@ -74,21 +74,22 @@ import { useDispatch, useSelector } from "react-redux";
 //   ];
 
 const CategoryList = () => {
-    const dispatch = useDispatch();
-    const categories = useSelector(selectAllCategories);
-    const productList = useSelector(selectAllProducts);
+  const dispatch = useDispatch();
+  const categories = useSelector(selectAllCategories);
+  const productList = useSelector(selectAllProducts);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [reload, setReload] = useState(false)
 
-   useEffect(() => {
-      dispatch(fetchCategories());
-  
-        dispatch(fetchProducts(null)); // Fetch for the first category initially
-      
-    }, []);
-    
-    
-     console.log("check",productList,categories);
+  useEffect(() => {
+    dispatch(fetchCategories());
+
+    dispatch(fetchProducts(null));
+
+  }, [reload]);
+
+
+ 
 
   const getCategoryData = () => {
     return categories.map((category) => {
@@ -98,32 +99,41 @@ const CategoryList = () => {
       const availableStock = products.reduce((sum, product) => sum + product.stock, 0);
       const totalSales = products.reduce((sum, product) => sum + product.sales, 0);
 
+
+
       return {
         ...category,
         availableStock,
         totalSales,
+        length: products.length || 0
       };
     });
   };
 
   const handleStatusChange = (categoryId) => {
-    setCategories((prev) =>
-      prev.map((category) =>
-        category.id === categoryId
-          ? { ...category, isActive: !category.isActive }
-          : category
-      )
-    );
+    dispatch(toggleCategoryStatus(categoryId));
+    // setCategories((prev) =>
+    //   prev.map((category) =>
+    //     category.id === categoryId
+    //       ? { ...category, isActive: !category.isActive }
+    //       : category
+    //   )
+    // );
   };
 
   const handleDeleteClick = (categoryId) => {
     setSelectedCategoryId(categoryId);
     setDeleteDialogOpen(true);
+
+
+
   };
 
   const handleConfirmDelete = () => {
     console.log("Deleted Category ID:", selectedCategoryId);
     setDeleteDialogOpen(false);
+    dispatch(deleteCategory(selectedCategoryId));
+    setReload(!reload)
   };
 
   const handleCancelDelete = () => {
@@ -131,6 +141,7 @@ const CategoryList = () => {
   };
 
   const categoryData = getCategoryData();
+
 
   return (
     <Box p={2}>
@@ -140,9 +151,9 @@ const CategoryList = () => {
           Add Category
         </Button>
       </Box>
-      <TableContainer component={Paper} sx={{width:"80%", marginTop:"7%"}}>
+      <TableContainer component={Paper} sx={{ width: "80%", marginTop: "7%" }}>
         <Table>
-          <TableHead sx={{backgroundColor:"#A9A9A9"}}>
+          <TableHead sx={{ backgroundColor: "#A9A9A9" }}>
             <TableRow>
               <TableCell><strong>Image</strong></TableCell>
               <TableCell><strong>Name</strong></TableCell>
@@ -177,6 +188,7 @@ const CategoryList = () => {
                     <EditIcon />
                   </IconButton>
                   <IconButton
+                    disabled={category?.length !== 0}
                     color="secondary"
                     onClick={() => handleDeleteClick(category.id)}
                   >

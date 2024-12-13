@@ -12,6 +12,7 @@ export default {
         isActive: true,
       },
       { id: 22323232323, name: "Meat", imageUrl: `${meat}`, isActive: true },
+      { id: 234324, name: " No Product", imageUrl: `${meat}`, isActive: true }
     ]),
   createCategory: (category) =>
     Promise.resolve({ ...category, isActive: true, id: Date.now() }),
