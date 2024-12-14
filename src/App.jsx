@@ -1,14 +1,8 @@
 
 
 import React, { lazy, Suspense } from "react";
-import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import "./index.css";
-import { selectAllCategories } from "./redux/categorySlice";
-import { selectAllOrders } from "./redux/orderSlice";
-import { selectAllProducts } from "./redux/productsSlice";
-import { selectProductsWithOrders } from "./redux/productsWithOrdersSlice";
 
 
 const Header = lazy(() => import("./components/Header"));
@@ -21,6 +15,7 @@ const CategoryList = lazy(() => import("./components/CategoryList"));
 const UpdateCategory = lazy(() => import("./components/UpdateCategory"));
 const ProductList = lazy(() => import("./components/ProductList"));
 const UpdateProduct = lazy(() => import("./components/UpdateProduct"));
+const NotFound = lazy(() => import("./components/NotFound"));
 
 
 const App = () => {
@@ -50,6 +45,9 @@ const App = () => {
           {/* Mainteined generic component for update and create */}
           <Route path="/products/create/:id" element={<UpdateProduct />} />
           <Route path="/products/update/:id" element={<UpdateProduct />} />
+
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
