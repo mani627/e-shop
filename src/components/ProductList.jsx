@@ -19,7 +19,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -28,6 +28,7 @@ import {
   selectAllProducts,
   toggleProductStatus,
 } from "../redux/productsSlice";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -40,12 +41,6 @@ const ProductList = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
-
-  // useEffect(() => {
-  //   if (categoryId) {
-  //     // dispatch(fetchProducts(categoryId));
-  //   }
-  // }, []);
 
   const handleAddProduct = () => {
     navigate(`/products/create/${categoryId}`);
@@ -74,6 +69,11 @@ const ProductList = () => {
     setSelectedProductId(null);
   };
 
+  const navigateCategoryList = () => {
+    navigate(`/categories`);
+  }
+
+
   return (
     <Box p={2}>
       {/* Title and Add Product Button */}
@@ -84,6 +84,11 @@ const ProductList = () => {
           marginBottom: "20px",
         }}
       >
+
+        <IconButton color="primary" onClick={navigateCategoryList} aria-label="go back">
+          <ArrowBackIcon />
+        </IconButton>
+
         <Typography variant="h6">Product List</Typography>
         <Button variant="contained" color="primary" onClick={handleAddProduct}>
           Add Product
@@ -91,9 +96,9 @@ const ProductList = () => {
       </div>
 
       {/* Table Container */}
-      <TableContainer component={Paper}>
+      <TableContainer sx={{ mt: 5 }} component={Paper} >
         <Table aria-label="products table">
-          <TableHead sx={{ backgroundColor: "#A9A9A9" }}>
+          <TableHead sx={{ backgroundColor: "#D0D0D0" }}>
             <TableRow>
               <TableCell>
                 <strong>Image</strong>
@@ -128,7 +133,7 @@ const ProductList = () => {
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    style={{ width: "50px", height: "50px" }}
+                    style={{ width: 50, height: 50, borderRadius: "50%" }}
                   />
                 </TableCell>
                 <TableCell>{product.name}</TableCell>

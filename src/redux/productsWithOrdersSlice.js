@@ -56,5 +56,4 @@ export const {
 
 export const selectProductsWithOrders = (state) => state.productsWithOrders;
 export const selectProductById = (state, id) => state.productsWithOrders?.find(product => product.id === id);
-
 export default productsWithOrdersSlice.reducer;

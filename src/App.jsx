@@ -24,12 +24,8 @@ const UpdateProduct = lazy(() => import("./components/UpdateProduct"));
 
 
 const App = () => {
-  const orders = useSelector(selectAllOrders);
-  const productsWithOrdersData = useSelector(selectProductsWithOrders);
-  const products = useSelector(selectAllProducts);
-  const categories = useSelector(selectAllCategories);
+  
 
-  //console.log("products",products, "orders",orders,"final",productsWithOrdersData);
 
   return (
     <BrowserRouter>
@@ -45,11 +41,13 @@ const App = () => {
 
           {/* Category Manipulation */}
           <Route path="/categories" element={<CategoryList />} />
+        {/* Mainteined generic component for update and create */}
           <Route path="/categories/create" element={<UpdateCategory />} />
           <Route path="/categories/update/:id" element={<UpdateCategory />} />
 
           {/* Product Manipulation */}
           <Route path="/products/list/:categoryId" element={<ProductList />} />
+          {/* Mainteined generic component for update and create */}
           <Route path="/products/create/:id" element={<UpdateProduct />} />
           <Route path="/products/update/:id" element={<UpdateProduct />} />
         </Routes>

@@ -33,16 +33,7 @@ const UpdateProduct = () => {
   });
 
   const [errors, setErrors] = useState({});
-
   const isUpdateMode = Boolean(id) && categoryId;
-
-
-
-  // useEffect(() => {
-  //   if (isUpdateMode) {
-     
-  //   }
-  // }, [id, dispatch]);
 
 
   useEffect(() => {
@@ -102,9 +93,13 @@ const UpdateProduct = () => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "price" || name === "stock" ? +value : value,
-    }));
-  };
+      [name]:
+        name === "price" || name === "stock"
+          ? value === "" || /^[0-9\b]+$/.test(value) 
+            ? +value
+            : prev[name] 
+          : value,
+    }))}
 
   const handleSubmit = (e) => {
     e.preventDefault();

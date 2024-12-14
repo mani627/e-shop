@@ -17,7 +17,6 @@ const ItemDescription = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
-
   const products = useSelector(selectAllProducts);
 
 

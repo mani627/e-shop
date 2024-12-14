@@ -4,16 +4,11 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         items: [
-
-
         ]
     },
     reducers: {
         addToCart: (state, action) => {
             const existingItem = state.items.find(item => item.id === action.payload.id && action.payload.categoryId === item.categoryId);
-
-
-
             if (existingItem) {
                 existingItem.quantity = Math.min(existingItem.quantity + 1, action.payload.stock); // Limit to stock
             } else {

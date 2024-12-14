@@ -57,8 +57,6 @@ const productsSlice = createSlice({
         
         const index = state.products.findIndex(
           (p) => {
-
-
            return p.id === +action.payload.id
           }
         );
@@ -92,17 +90,13 @@ export const fetchProducts = createAsyncThunk(
   async (categoryId, { getState }) => {
     const productsWithOrders = getState().productsWithOrders; // Access productsWithOrders slice
     const existStateProducts = getState().products;
-    const deleteProductIds = existStateProducts.deleteProductId; // Access deleted product IDs
-
-
-    
+    const deleteProductIds = existStateProducts.deleteProductId; // Access deleted product IDs  
     let products = await mockApi.fetchProducts(categoryId);
 
     function updateProducts(products, exist) {
       return products.map((product) => {
         // Find the matching product in the exist array
-        const matchingProduct = exist.find((item) => item.id === product.id);
-        
+        const matchingProduct = exist.find((item) => item.id === product.id);     
         return matchingProduct ? matchingProduct : product;
       });
     }
@@ -126,8 +120,6 @@ export const createProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async (product) => {
-
-   
     return await mockApi.updateProduct(product);
   }
 );

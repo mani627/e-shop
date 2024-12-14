@@ -115,9 +115,9 @@ const CategoryList = () => {
           Add Category
         </Button>
       </Box>
-      <TableContainer component={Paper} sx={{ width: "80%", marginTop: "7%" }}>
+      <TableContainer component={Paper} sx={{ width: "100%", marginTop: "4%" }}>
         <Table>
-          <TableHead sx={{ backgroundColor: "#A9A9A9" }}>
+          <TableHead sx={{ backgroundColor: "#D0D0D0" }}>
             <TableRow>
               <TableCell>
                 <strong>Image</strong>

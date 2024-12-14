@@ -1,5 +1,6 @@
 import SettingsIcon from "@mui/icons-material/Settings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import AppBar from "@mui/material/AppBar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -10,26 +11,36 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectCartItems } from "../redux/cartSlice";
+import HomeIcon from '@mui/icons-material/Home';
 
 const Header = () => {
-  const navigate = useNavigate(); 
-  
+  const navigate = useNavigate();
+
   const cartCount = useSelector(selectCartItems)?.length;
 
   const handleCartClick = () => {
-    navigate("/cart"); 
+    navigate("/cart");
   };
+  const handleOrdersClick = () => {
+    navigate("/orders");
+  }
 
   const handleSettingsClick = () => {
-    navigate("/categories"); 
+    navigate("/categories");
   };
 
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
         {/* Left Side - Logo */}
-        <Typography onClick={()=>navigate("/")} variant="h6" component="div" sx={{ flexGrow: 1, cursor:"pointer" }}>
-          MyLogo
+        <Typography onClick={() => navigate("/")} variant="h6" component="div"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            flexGrow: 1, cursor: "pointer"
+          }}>
+          <HomeIcon />
         </Typography>
 
         {/* Right Side - Cart Icon and Settings Icon */}
@@ -43,6 +54,14 @@ const Header = () => {
             <Badge badgeContent={cartCount} color="error">
               <ShoppingCartIcon />
             </Badge>
+          </IconButton>
+
+          <IconButton
+            color="inherit"
+            aria-label="orders"
+            onClick={handleOrdersClick}
+          >
+            <MoveToInboxIcon />
           </IconButton>
 
           {/* Settings Icon */}

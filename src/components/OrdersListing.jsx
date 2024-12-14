@@ -22,7 +22,6 @@ const OrdersListing = () => {
 
 
   useEffect(() => {
-
     dispatch(addProductsWithOrders(products));
   }, [])
 
@@ -46,6 +45,7 @@ const OrdersListing = () => {
   }
   return (
     <Box sx={{ padding: 3 }}>
+        <Typography variant="h6" mb={3}>Orders List</Typography>
       <Grid container sx={{ width: "80%" }} spacing={3}>
         {orderList.map((order) => (
           <Grid item xs={12} key={order.orderId}>

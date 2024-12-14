@@ -19,7 +19,6 @@ export const placeOrder = createAsyncThunk(
     // Get products state to access stock information
     const products = getState().products.products;
 
-
     const hasOverstockedItems = cartItems.some(
       (item) => item.quantity > item.stock
     );
@@ -29,11 +28,7 @@ export const placeOrder = createAsyncThunk(
 
       throw new Error(`Not enough stock for product to Place order`);
     }
-
-
     const order = await mockApi.placeOrder(cartItems);
-
-
     return { ...order, items: cartItems };
   }
 );
