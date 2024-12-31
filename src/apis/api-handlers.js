@@ -1,6 +1,17 @@
-// mockApi.js
+import { API_END_POINTS } from "./api-constants";
 import vegetables from "../assets/images/vegetables.jpg";
 import meat from "../assets/images/meat.jpg";
+
+//sample controllers code
+export const resendOtp = async (data) => {
+  const validateOtpResponse = await Request({
+    url: "apiBaseUrl" + API_END_POINTS.resendOtp.endPoint,
+    method: "get/post",
+    body: { ...data },
+  });
+  return validateOtpResponse;
+};
+
 
 // mock like API fetching
 export default {
